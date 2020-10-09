@@ -6,6 +6,7 @@
 package DaoCadastroRegistroAlunos;
 
 import java.sql.*;
+import java.util.ArrayList;
 import javax.swing.JOptionPane;
 
 /**
@@ -15,8 +16,10 @@ import javax.swing.JOptionPane;
  */
 public class DatabaseConnection {
     
+    /**Usada para localizar o BD*/
+    private static ArrayList<String> bancos;
     
-     /** Usada para a conexao com o banco de dados */
+    /** Usada para a conexao com o banco de dados */
     private Connection con = null;
     
     /** Usada para realizar as instrucoes SQL */
@@ -35,18 +38,18 @@ public class DatabaseConnection {
     /**Usada para receber a senha do usuario do banco */
     private String senha; 
 
-    /** Esse metodo realiza a conexao com o banco, ele precisa de tres argumentos, o primeiro, recebe
-     * o endereço do banco, o segundo recebe o nome do usuario e o terceiro recebe a senha do 
-     * banco de dados. 
+    /** Esse metodo realiza a conexao inicial com o banco, se ele não encontra
+     * o database no sistema ele cria, se encontra, ele sinaliza e usa aquela.
+     *
      * 
-     * EXP: "jdbc:postgresql://localhost:5432/projeto_01", "sa", "sa"
+     * EXP: "jdbc:postgresql://localhost:5432/projeto_01, "sa", "sa" "
      * 
      *
-     * @param nomeBanco Nome do Banco de Dados
-     * @param strUsuario
+     * @param strUsuario Login 
+     * @param strSenha Senha
      */
     
-    public void ConexaoInicial(String nomeBanco, String strUsuario, String strSenha) {
+    public void ConexaoInicial(String strUsuario, String strSenha) {
 
     	/** Recebendo o endereco,usuario e senha do usuario e repassando para a variavel global */
         endereco = "jdbc:postgresql://localhost:5432/"; 
@@ -64,15 +67,28 @@ public class DatabaseConnection {
             con = DriverManager.getConnection(endereco, usuario, senha);
             
             /** Criando o Statement */
-            stmt = con.createStatement();
+            stmt = con.createStatement();           
+                                   
+            rs = stmt.executeQuery("SELECT datname FROM pg_catalog.pg_database pd");
             
-            String sqlInicial = "SELECT 'CREATE DATABASE teste1 '\n"
-                    + "WHERE NOT EXISTS (SELECT FROM pg_database WHERE datname "
-                    + "= 'teste1')\\gexec"; //TODO 07/10 -> Fixar query para fazer com que seja criado o bd.
+            bancos = new ArrayList<>();
             
-            stmt.addBatch(sqlInicial);
-            stmt.executeBatch();
-            stmt.clearBatch();
+            while(rs.next()){                
+                bancos.add(rs.getString("datname"));                
+            }
+            
+            if(!(bancos.contains("teste4"))){
+                String sqlCreate = "CREATE DATABASE teste4;";
+                stmt.addBatch(sqlCreate);
+                stmt.executeBatch();
+                System.out.println("Banco 'teste4' criado com sucesso!");
+                stmt.clearBatch();
+                stmt.close();
+            }else{
+                System.out.println("Banco 'teste4' já existente!");
+            }
+            
+            //stmt.clearBatch();
             stmt.close();
             
         /** Retorna um erro caso nao encontre o driver, ou alguma informacao sobre o mesmo
@@ -86,6 +102,8 @@ public class DatabaseConnection {
             JOptionPane.showMessageDialog(null, "erro na query");
             sqlex.printStackTrace();
 
+        } finally {
+            Desconectar();
         }
     }
     
