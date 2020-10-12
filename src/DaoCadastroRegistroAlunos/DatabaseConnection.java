@@ -152,9 +152,7 @@ public class DatabaseConnection {
     	/** Recebendo o endereco,usuario e senha do usuario e repassando para a variavel global */
         endereco = "jdbc:postgresql://localhost:5432/" + nomeBanco; 
         usuario = strUsuario == null ? "postgres" : strUsuario;
-        //usuario = "postgres";
         senha = strSenha == null ? "admin" : strSenha ;
-        //senha = "admin";
 
         try {
             
