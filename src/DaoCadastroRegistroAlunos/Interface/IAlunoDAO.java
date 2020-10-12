@@ -14,7 +14,7 @@ import java.util.List;
  */
 public interface IAlunoDAO {
     
-    /**Implementação que Seleciona uma lista de alunos.
+    /**Seleciona uma lista de alunos.
      * @param aluno Instância da classe para filtrar consulta.
      * @return  
      */
@@ -26,7 +26,7 @@ public interface IAlunoDAO {
     void Incluir(Aluno aluno);
     
     /**Atualizar um registro no BD
-     * @param aluno Instância de um aluno com dados para cadastro.
+     * @param aluno Instância de um aluno com dados para atualizacao.
      */
     void Atualizar(Aluno aluno);
     

@@ -22,7 +22,7 @@ public class CadastroRegistroAlunos {
         System.out.println("testeBD");
         DatabaseConnection conexao = new DatabaseConnection();
         
-        conexao.ConexaoInicial(null, null);
+        conexao.ConexaoInicial("teste4", null, null);
         //conexao.Conectar("postgres", null, null);
         //conexao.Desconectar();
     }
