@@ -5,44 +5,43 @@
  */
 package DaoCadastroRegistroAlunos;
 
-import DaoCadastroRegistroAlunos.Interface.IAlunoDAO;
-import ModelCadastroRegistroAlunos.Aluno;
+import DaoCadastroRegistroAlunos.Interface.ICursoAlunoDAO;
+import ModelCadastroRegistroAlunos.Curso;
+import ModelCadastroRegistroAlunos.CursoAluno;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 
 /**
  *
  * @author rodri
  */
-public class AlunoDAO implements IAlunoDAO {
-    
+public class CursoAlunoDAO implements ICursoAlunoDAO {
+
     private DatabaseConnection conexao = new DatabaseConnection();
     
-    private String querySelecionar = "SELECT * FROM aluno;";
+    private String querySelecionar = "SELECT * FROM curso_aluno;";
     
-    private String queryIncluir = "INSERT INTO aluno (nome) VALUES ( '{0}' );";
+    private String queryIncluir = "INSERT INTO curso_aluno (id_aluno,id_curso) VALUES ( '{0}','{1}' );";
     
-    private String queryAtualizar = "UPDATE aluno SET nome = '{0}' WHERE id_aluno = {1};";
+    private String queryAtualizar = "UPDATE curso_aluno SET id_aluno = '{0}',id_curso = '{1}' WHERE id_curso_aluno = {2};";
     
-    private String queryExcluir = "DELETE FROM aluno WHERE id_aluno = {0};";
+    private String queryExcluir = "DELETE FROM curso_aluno WHERE id_curso_aluno = {0};";
     
     @Override
-    public List<Aluno> Selecionar(Aluno aluno) {
-        
-        List<Aluno> alunos = new ArrayList<Aluno>();
+    public List<CursoAluno> Selecionar(CursoAluno cursoAluno) {
+        List<CursoAluno> cursoAlunos = new ArrayList<>();
        
         try {           
             conexao.Conectar("teste4", null, null);
             conexao.rs = conexao.stmt.executeQuery(querySelecionar);
             
             while(conexao.rs.next()){
-                aluno.IdAluno = conexao.rs.getInt("id_aluno");
-                aluno.Nome = conexao.rs.getString("nome");
-                alunos.add(aluno);
+                cursoAluno.IdCursoAluno = conexao.rs.getInt("id_curso_aluno");
+                cursoAluno.IdAluno = conexao.rs.getInt("id_aluno");
+                cursoAluno.IdCurso = conexao.rs.getInt("id_curso");
+                cursoAlunos.add(cursoAluno);
             }
             
             conexao.Desconectar();                
@@ -51,15 +50,16 @@ public class AlunoDAO implements IAlunoDAO {
             sqlex.printStackTrace();
         }
               
-       return alunos; 
+       return cursoAlunos;
     }
 
     @Override
-    public void Incluir(Aluno aluno) {
+    public void Incluir(CursoAluno cursoAluno) {
         try{
             conexao.Conectar("teste4", null, null);
             
-            String query = queryIncluir.replace("{0}",aluno.Nome);           
+            String query = queryIncluir.replace("{0}",Integer.toString(cursoAluno.IdAluno));   
+            query = query.replace("{1}", Integer.toString(cursoAluno.IdCurso));
             conexao.stmt.executeQuery(query);
             
             conexao.Desconectar();
@@ -71,12 +71,13 @@ public class AlunoDAO implements IAlunoDAO {
     }
 
     @Override
-    public void Atualizar(Aluno aluno) {
+    public void Atualizar(CursoAluno cursoAluno) {        
         try{
             conexao.Conectar("teste4", null, null);
             
-            String query = queryAtualizar.replace("{0}",aluno.Nome);
-            query = query.replace("{1}",Integer.toString(aluno.IdAluno));           
+            String query = queryAtualizar.replace("{0}", Integer.toString(cursoAluno.IdAluno));
+            query = query.replace("[1]", Integer.toString(cursoAluno.IdCurso));
+            query = query.replace("{2}", Integer.toString(cursoAluno.IdCursoAluno));           
             conexao.stmt.executeQuery(query);
             
             conexao.Desconectar();
@@ -84,23 +85,22 @@ public class AlunoDAO implements IAlunoDAO {
         }catch(SQLException sqlex){
             JOptionPane.showMessageDialog(null, "erro na query");
             sqlex.printStackTrace();
-        }       
+        }
     }
 
     @Override
-    public void Excluir(Aluno aluno) {
+    public void Excluir(CursoAluno cursoAluno) {
         try{
             conexao.Conectar("teste4", null, null);
             
-            String query = queryExcluir.replace("{0}",Integer.toString(aluno.IdAluno));
+            String query = queryExcluir.replace("{0}",Integer.toString(cursoAluno.IdCursoAluno));
             conexao.stmt.executeQuery(query);
             
-            conexao.Desconectar();
-            
+            conexao.Desconectar();           
         }catch(SQLException sqlex){
             JOptionPane.showMessageDialog(null, "erro na query");
             sqlex.printStackTrace();
-        }            
+        }
     }
     
 }

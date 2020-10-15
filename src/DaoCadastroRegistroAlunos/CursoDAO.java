@@ -5,44 +5,43 @@
  */
 package DaoCadastroRegistroAlunos;
 
-import DaoCadastroRegistroAlunos.Interface.IAlunoDAO;
+import DaoCadastroRegistroAlunos.Interface.ICursoDAO;
 import ModelCadastroRegistroAlunos.Aluno;
+import ModelCadastroRegistroAlunos.Curso;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 
 /**
  *
  * @author rodri
  */
-public class AlunoDAO implements IAlunoDAO {
-    
+public class CursoDAO implements ICursoDAO {
+
     private DatabaseConnection conexao = new DatabaseConnection();
     
-    private String querySelecionar = "SELECT * FROM aluno;";
+    private String querySelecionar = "SELECT * FROM curso;";
     
-    private String queryIncluir = "INSERT INTO aluno (nome) VALUES ( '{0}' );";
+    private String queryIncluir = "INSERT INTO curso (descricao,ementa) VALUES ( '{0}','{1}' );";
     
-    private String queryAtualizar = "UPDATE aluno SET nome = '{0}' WHERE id_aluno = {1};";
+    private String queryAtualizar = "UPDATE curso SET descricao = '{0}',ementa = '{1}' WHERE id_curso = {2};";
     
-    private String queryExcluir = "DELETE FROM aluno WHERE id_aluno = {0};";
+    private String queryExcluir = "DELETE FROM curso WHERE id_curso = {0};";
     
     @Override
-    public List<Aluno> Selecionar(Aluno aluno) {
-        
-        List<Aluno> alunos = new ArrayList<Aluno>();
+    public List<Curso> Selecionar(Curso curso) {
+        List<Curso> cursos = new ArrayList<Curso>();
        
         try {           
             conexao.Conectar("teste4", null, null);
             conexao.rs = conexao.stmt.executeQuery(querySelecionar);
             
             while(conexao.rs.next()){
-                aluno.IdAluno = conexao.rs.getInt("id_aluno");
-                aluno.Nome = conexao.rs.getString("nome");
-                alunos.add(aluno);
+                curso.IdCurso = conexao.rs.getInt("id_curso");
+                curso.Descricao = conexao.rs.getString("descricao");
+                curso.Ementa = conexao.rs.getString("ementa");
+                cursos.add(curso);
             }
             
             conexao.Desconectar();                
@@ -51,15 +50,16 @@ public class AlunoDAO implements IAlunoDAO {
             sqlex.printStackTrace();
         }
               
-       return alunos; 
+       return cursos;       
     }
 
     @Override
-    public void Incluir(Aluno aluno) {
+    public void Incluir(Curso curso) {
         try{
             conexao.Conectar("teste4", null, null);
             
-            String query = queryIncluir.replace("{0}",aluno.Nome);           
+            String query = queryIncluir.replace("{0}",curso.Descricao);   
+            query = query.replace("{1}", curso.Ementa);
             conexao.stmt.executeQuery(query);
             
             conexao.Desconectar();
@@ -67,16 +67,17 @@ public class AlunoDAO implements IAlunoDAO {
         }catch(SQLException sqlex){
             JOptionPane.showMessageDialog(null, "erro na query");
             sqlex.printStackTrace();
-        }
+        }        
     }
 
     @Override
-    public void Atualizar(Aluno aluno) {
+    public void Atualizar(Curso curso) {
         try{
             conexao.Conectar("teste4", null, null);
             
-            String query = queryAtualizar.replace("{0}",aluno.Nome);
-            query = query.replace("{1}",Integer.toString(aluno.IdAluno));           
+            String query = queryAtualizar.replace("{0}",curso.Descricao);
+            query = query.replace("[1]", curso.Ementa);
+            query = query.replace("{2}",Integer.toString(curso.IdCurso));           
             conexao.stmt.executeQuery(query);
             
             conexao.Desconectar();
@@ -84,15 +85,15 @@ public class AlunoDAO implements IAlunoDAO {
         }catch(SQLException sqlex){
             JOptionPane.showMessageDialog(null, "erro na query");
             sqlex.printStackTrace();
-        }       
+        } 
     }
 
     @Override
-    public void Excluir(Aluno aluno) {
+    public void Excluir(Curso curso) {       
         try{
             conexao.Conectar("teste4", null, null);
             
-            String query = queryExcluir.replace("{0}",Integer.toString(aluno.IdAluno));
+            String query = queryExcluir.replace("{0}",Integer.toString(curso.IdCurso));
             conexao.stmt.executeQuery(query);
             
             conexao.Desconectar();
@@ -100,7 +101,6 @@ public class AlunoDAO implements IAlunoDAO {
         }catch(SQLException sqlex){
             JOptionPane.showMessageDialog(null, "erro na query");
             sqlex.printStackTrace();
-        }            
-    }
-    
+        }   
+    }    
 }
