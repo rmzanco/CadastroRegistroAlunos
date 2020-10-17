@@ -5,16 +5,34 @@
  */
 package my.cadastroregistroalunos;
 
+import BLLCadastroRegistroAlunos.AlunoBLO;
+import BLLCadastroRegistroAlunos.CursoAlunoBLO;
+import BLLCadastroRegistroAlunos.CursoBLO;
+import BLLCadastroRegistroAlunos.Interface.IAlunoBLO;
+import BLLCadastroRegistroAlunos.Interface.ICursoAlunoBLO;
+import BLLCadastroRegistroAlunos.Interface.ICursoBLO;
+import ModelCadastroRegistroAlunos.Aluno;
+import ModelCadastroRegistroAlunos.Curso;
+import ModelCadastroRegistroAlunos.CursoAluno;
+import javax.swing.JOptionPane;
+
 /**
  *
  * @author rodri
  */
 public class CadastroRegistroAlunosUI extends javax.swing.JFrame {
 
+    private static IAlunoBLO alunoBlo = null;
+    private static ICursoBLO cursoBlo = null;
+    private static ICursoAlunoBLO cursoAlunoBlo = null;
+    
     /**
      * Creates new form CadastroRegistroAlunosUI
      */
     public CadastroRegistroAlunosUI() {
+        this.alunoBlo = new AlunoBLO();
+        this.cursoBlo = new CursoBLO();
+        this.cursoAlunoBlo = new CursoAlunoBLO();
         initComponents();
     }
 
@@ -42,17 +60,17 @@ public class CadastroRegistroAlunosUI extends javax.swing.JFrame {
         jLabel2 = new javax.swing.JLabel();
         jTabbedPane3 = new javax.swing.JTabbedPane();
         jPanel5 = new javax.swing.JPanel();
-        jButton1 = new javax.swing.JButton();
+        btn_InserirAluno = new javax.swing.JButton();
         jLabel5 = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
-        jTextField3 = new javax.swing.JTextField();
-        jTextField4 = new javax.swing.JTextField();
+        tf_nmAluno = new javax.swing.JTextField();
+        comboCursos = new javax.swing.JComboBox<>();
         jPanel6 = new javax.swing.JPanel();
-        jButton2 = new javax.swing.JButton();
+        btn_InserirCurso = new javax.swing.JButton();
         jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
-        jTextField1 = new javax.swing.JTextField();
-        jTextField2 = new javax.swing.JTextField();
+        tf_descricao = new javax.swing.JTextField();
+        tf_ementa = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -149,10 +167,10 @@ public class CadastroRegistroAlunosUI extends javax.swing.JFrame {
 
         jLabel2.setText("Cadastrar novos registros");
 
-        jButton1.setText("Inserir");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        btn_InserirAluno.setText("Inserir");
+        btn_InserirAluno.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                btn_InserirAlunoActionPerformed(evt);
             }
         });
 
@@ -160,17 +178,17 @@ public class CadastroRegistroAlunosUI extends javax.swing.JFrame {
 
         jLabel6.setText("Curso:");
 
-        jTextField3.setText("Insira o nome do aluno...");
-        jTextField3.addActionListener(new java.awt.event.ActionListener() {
+        tf_nmAluno.setText("Insira o nome do aluno...");
+        tf_nmAluno.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextField3ActionPerformed(evt);
+                tf_nmAlunoActionPerformed(evt);
             }
         });
 
-        jTextField4.setText("Insira o curso do aluno...");
-        jTextField4.addActionListener(new java.awt.event.ActionListener() {
+        comboCursos.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        comboCursos.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextField4ActionPerformed(evt);
+                comboCursosActionPerformed(evt);
             }
         });
 
@@ -184,14 +202,15 @@ public class CadastroRegistroAlunosUI extends javax.swing.JFrame {
                     .addGroup(jPanel5Layout.createSequentialGroup()
                         .addComponent(jLabel5)
                         .addGap(18, 18, 18)
-                        .addComponent(jTextField3))
+                        .addComponent(tf_nmAluno, javax.swing.GroupLayout.DEFAULT_SIZE, 458, Short.MAX_VALUE))
                     .addGroup(jPanel5Layout.createSequentialGroup()
                         .addComponent(jLabel6)
                         .addGap(18, 18, 18)
-                        .addComponent(jTextField4, javax.swing.GroupLayout.DEFAULT_SIZE, 457, Short.MAX_VALUE))
+                        .addComponent(comboCursos, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel5Layout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(jButton1)))
+                        .addComponent(btn_InserirAluno)))
                 .addContainerGap())
         );
         jPanel5Layout.setVerticalGroup(
@@ -200,32 +219,37 @@ public class CadastroRegistroAlunosUI extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel5)
-                    .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(tf_nmAluno, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel6)
-                    .addComponent(jTextField4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(comboCursos, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jButton1)
+                .addComponent(btn_InserirAluno)
                 .addContainerGap(346, Short.MAX_VALUE))
         );
 
         jTabbedPane3.addTab("Aluno", jPanel5);
 
-        jButton2.setText("Inserir");
+        btn_InserirCurso.setText("Inserir");
+        btn_InserirCurso.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_InserirCursoActionPerformed(evt);
+            }
+        });
 
         jLabel3.setText("Descrição:");
 
         jLabel4.setText("Ementa:");
 
-        jTextField1.setText("Insira aqui a descrição do curso...");
-        jTextField1.addActionListener(new java.awt.event.ActionListener() {
+        tf_descricao.setText("Insira aqui a descrição do curso...");
+        tf_descricao.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextField1ActionPerformed(evt);
+                tf_descricaoActionPerformed(evt);
             }
         });
 
-        jTextField2.setText("Insira aqui a ementa do curso...");
+        tf_ementa.setText("Insira aqui a ementa do curso...");
 
         javax.swing.GroupLayout jPanel6Layout = new javax.swing.GroupLayout(jPanel6);
         jPanel6.setLayout(jPanel6Layout);
@@ -237,14 +261,14 @@ public class CadastroRegistroAlunosUI extends javax.swing.JFrame {
                     .addGroup(jPanel6Layout.createSequentialGroup()
                         .addComponent(jLabel4)
                         .addGap(18, 18, 18)
-                        .addComponent(jTextField2))
+                        .addComponent(tf_ementa))
                     .addGroup(jPanel6Layout.createSequentialGroup()
                         .addComponent(jLabel3)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jTextField1, javax.swing.GroupLayout.DEFAULT_SIZE, 447, Short.MAX_VALUE))
+                        .addComponent(tf_descricao, javax.swing.GroupLayout.DEFAULT_SIZE, 447, Short.MAX_VALUE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel6Layout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(jButton2)))
+                        .addComponent(btn_InserirCurso)))
                 .addContainerGap())
         );
         jPanel6Layout.setVerticalGroup(
@@ -253,13 +277,13 @@ public class CadastroRegistroAlunosUI extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel3)
-                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(tf_descricao, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel4)
-                    .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(tf_ementa, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jButton2)
+                .addComponent(btn_InserirCurso)
                 .addContainerGap(303, Short.MAX_VALUE))
         );
 
@@ -310,60 +334,44 @@ public class CadastroRegistroAlunosUI extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jButton1ActionPerformed
+    private void btn_InserirAlunoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_InserirAlunoActionPerformed
+        Aluno aluno = new Aluno();
+        CursoAluno cursoAluno = new CursoAluno();
+        
+        
+        aluno.setNome(tf_nmAluno.toString());
+        
+    }//GEN-LAST:event_btn_InserirAlunoActionPerformed
 
-    private void jTextField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField1ActionPerformed
+    private void tf_descricaoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tf_descricaoActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField1ActionPerformed
+    }//GEN-LAST:event_tf_descricaoActionPerformed
 
-    private void jTextField3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField3ActionPerformed
+    private void tf_nmAlunoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tf_nmAlunoActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField3ActionPerformed
+    }//GEN-LAST:event_tf_nmAlunoActionPerformed
 
-    private void jTextField4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField4ActionPerformed
+    private void comboCursosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_comboCursosActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField4ActionPerformed
+    }//GEN-LAST:event_comboCursosActionPerformed
 
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(CadastroRegistroAlunosUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(CadastroRegistroAlunosUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(CadastroRegistroAlunosUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(CadastroRegistroAlunosUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+    private void btn_InserirCursoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_InserirCursoActionPerformed
+        try{
+            Curso curso = new Curso();
+            curso.Descricao = tf_descricao.getText();
+            curso.Ementa = tf_ementa.getText();
+            cursoBlo.Incluir(curso);            
+        }catch(Exception e){
+            JOptionPane.showMessageDialog(null, "Erro ao Incluir Curso no BD.");
+            e.printStackTrace();
         }
-        //</editor-fold>
-
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new CadastroRegistroAlunosUI().setVisible(true);
-            }
-        });
-    }
+            
+    }//GEN-LAST:event_btn_InserirCursoActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
+    private javax.swing.JButton btn_InserirAluno;
+    private javax.swing.JButton btn_InserirCurso;
+    private javax.swing.JComboBox<String> comboCursos;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
@@ -384,9 +392,8 @@ public class CadastroRegistroAlunosUI extends javax.swing.JFrame {
     private javax.swing.JTabbedPane jTabbedPane3;
     private javax.swing.JTable jTable1;
     private javax.swing.JTable jTable2;
-    private javax.swing.JTextField jTextField1;
-    private javax.swing.JTextField jTextField2;
-    private javax.swing.JTextField jTextField3;
-    private javax.swing.JTextField jTextField4;
+    private javax.swing.JTextField tf_descricao;
+    private javax.swing.JTextField tf_ementa;
+    private javax.swing.JTextField tf_nmAluno;
     // End of variables declaration//GEN-END:variables
 }

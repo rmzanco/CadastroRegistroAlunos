@@ -45,6 +45,7 @@ public class AlunoDAO implements IAlunoDAO {
                 alunos.add(aluno);
             }
             
+            //TODO: CRIAR PARAMETROS PARA O SELECIONAR (WHERE) - PARA ENCONTRAR QUAL CAMPO DEVE SER ATUALIZADO.
             conexao.Desconectar();                
         } catch (SQLException sqlex) {
             JOptionPane.showMessageDialog(null, "erro na query");
@@ -59,8 +60,8 @@ public class AlunoDAO implements IAlunoDAO {
         try{
             conexao.Conectar("teste4", null, null);
             
-            String query = queryIncluir.replace("{0}",aluno.Nome);           
-            conexao.stmt.executeQuery(query);
+            String sql = queryIncluir.replace("{0}",aluno.Nome);           
+            conexao.stmt.execute(sql);
             
             conexao.Desconectar();
             
@@ -75,9 +76,9 @@ public class AlunoDAO implements IAlunoDAO {
         try{
             conexao.Conectar("teste4", null, null);
             
-            String query = queryAtualizar.replace("{0}",aluno.Nome);
-            query = query.replace("{1}",Integer.toString(aluno.IdAluno));           
-            conexao.stmt.executeQuery(query);
+            String sql = queryAtualizar.replace("{0}",aluno.Nome);
+            sql = sql.replace("{1}",Integer.toString(aluno.IdAluno));           
+            conexao.stmt.execute(sql);
             
             conexao.Desconectar();
             
@@ -92,8 +93,8 @@ public class AlunoDAO implements IAlunoDAO {
         try{
             conexao.Conectar("teste4", null, null);
             
-            String query = queryExcluir.replace("{0}",Integer.toString(aluno.IdAluno));
-            conexao.stmt.executeQuery(query);
+            String sql = queryExcluir.replace("{0}",Integer.toString(aluno.IdAluno));
+            conexao.stmt.execute(sql);
             
             conexao.Desconectar();
             

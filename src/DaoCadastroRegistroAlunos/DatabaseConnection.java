@@ -41,14 +41,11 @@ public class DatabaseConnection {
     /** Esse metodo realiza a conexao inicial com o banco, se ele não encontra
      * o database no sistema ele cria, se encontra, ele sinaliza e usa aquela.
      *
-     * 
-     * EXP: "jdbc:postgresql://localhost:5432/projeto_01, "sa", "sa" "
-     * 
+     * EXP: "jdbc:postgresql://localhost:5432/projeto_01, "sa", "sa" " 
      *
      * @param strUsuario Login 
      * @param strSenha Senha
-     */
-    
+     */  
     public void ConexaoInicial(String nomeBanco, String strUsuario, String strSenha) {
 
     	/** Recebendo o endereco,usuario e senha do usuario e repassando para a variavel global */
@@ -67,18 +64,15 @@ public class DatabaseConnection {
             con = DriverManager.getConnection(endereco, usuario, senha);
             
             /** Criando o Statement */
-            stmt = con.createStatement();           
-                                   
-            rs = stmt.executeQuery("SELECT datname FROM pg_catalog.pg_database pd");
-            
+            stmt = con.createStatement();                                             
+            rs = stmt.executeQuery("SELECT datname FROM pg_catalog.pg_database pd");            
             bancos = new ArrayList<>();
             
             while(rs.next()){                
                 bancos.add(rs.getString("datname"));                
             }
             
-            System.out.println("Verificando a existência do Banco de Dados...");
-            
+            System.out.println("Verificando a existência do Banco de Dados...");          
             if(!(bancos.contains(nomeBanco))){
                 System.out.println("Banco não encontrado, executando script de criação do DB...");
                 CriarDatabase(nomeBanco);
@@ -86,7 +80,6 @@ public class DatabaseConnection {
                 System.out.println("Banco '"+ nomeBanco +"' já existente!");
             }
             
-            //stmt.clearBatch();
             stmt.close();
             
         /** Retorna um erro caso nao encontre o driver, ou alguma informacao sobre o mesmo
@@ -145,8 +138,7 @@ public class DatabaseConnection {
         //sql = "";
         stmt.close();
     }
-    
-    
+      
     public void Conectar(String nomeBanco, String strUsuario, String strSenha) {
 
     	/** Recebendo o endereco,usuario e senha do usuario e repassando para a variavel global */

@@ -44,6 +44,8 @@ public class CursoAlunoDAO implements ICursoAlunoDAO {
                 cursoAlunos.add(cursoAluno);
             }
             
+            
+            //TODO: CRIAR PARAMETROS PARA O SELECIONAR (WHERE) - PARA ENCONTRAR QUAL CAMPO DEVE SER ATUALIZADO.
             conexao.Desconectar();                
         } catch (SQLException sqlex) {
             JOptionPane.showMessageDialog(null, "erro na query");
@@ -58,9 +60,9 @@ public class CursoAlunoDAO implements ICursoAlunoDAO {
         try{
             conexao.Conectar("teste4", null, null);
             
-            String query = queryIncluir.replace("{0}",Integer.toString(cursoAluno.IdAluno));   
-            query = query.replace("{1}", Integer.toString(cursoAluno.IdCurso));
-            conexao.stmt.executeQuery(query);
+            String sql = queryIncluir.replace("{0}",Integer.toString(cursoAluno.IdAluno));   
+            sql = sql.replace("{1}", Integer.toString(cursoAluno.IdCurso));
+            conexao.stmt.execute(sql);
             
             conexao.Desconectar();
             
@@ -75,10 +77,10 @@ public class CursoAlunoDAO implements ICursoAlunoDAO {
         try{
             conexao.Conectar("teste4", null, null);
             
-            String query = queryAtualizar.replace("{0}", Integer.toString(cursoAluno.IdAluno));
-            query = query.replace("[1]", Integer.toString(cursoAluno.IdCurso));
-            query = query.replace("{2}", Integer.toString(cursoAluno.IdCursoAluno));           
-            conexao.stmt.executeQuery(query);
+            String sql = queryAtualizar.replace("{0}", Integer.toString(cursoAluno.IdAluno));
+            sql = sql.replace("[1]", Integer.toString(cursoAluno.IdCurso));
+            sql = sql.replace("{2}", Integer.toString(cursoAluno.IdCursoAluno));           
+            conexao.stmt.execute(sql);
             
             conexao.Desconectar();
             
@@ -93,8 +95,8 @@ public class CursoAlunoDAO implements ICursoAlunoDAO {
         try{
             conexao.Conectar("teste4", null, null);
             
-            String query = queryExcluir.replace("{0}",Integer.toString(cursoAluno.IdCursoAluno));
-            conexao.stmt.executeQuery(query);
+            String sql = queryExcluir.replace("{0}",Integer.toString(cursoAluno.IdCursoAluno));
+            conexao.stmt.execute(sql);
             
             conexao.Desconectar();           
         }catch(SQLException sqlex){
