@@ -41,15 +41,12 @@ public class DatabaseConnection {
     /** Esse metodo realiza a conexao inicial com o banco, se ele não encontra
      * o database no sistema ele cria, se encontra, ele sinaliza e usa aquela.
      *
-     * 
-     * EXP: "jdbc:postgresql://localhost:5432/projeto_01, "sa", "sa" "
-     * 
+     * EXP: "jdbc:postgresql://localhost:5432/projeto_01, "sa", "sa" " 
      *
      * @param strUsuario Login 
      * @param strSenha Senha
-     */
-    
-    public void ConexaoInicial(String strUsuario, String strSenha) {
+     */  
+    public void ConexaoInicial(String nomeBanco, String strUsuario, String strSenha) {
 
     	/** Recebendo o endereco,usuario e senha do usuario e repassando para a variavel global */
         endereco = "jdbc:postgresql://localhost:5432/"; 
@@ -67,28 +64,22 @@ public class DatabaseConnection {
             con = DriverManager.getConnection(endereco, usuario, senha);
             
             /** Criando o Statement */
-            stmt = con.createStatement();           
-                                   
-            rs = stmt.executeQuery("SELECT datname FROM pg_catalog.pg_database pd");
-            
+            stmt = con.createStatement();                                             
+            rs = stmt.executeQuery("SELECT datname FROM pg_catalog.pg_database pd");            
             bancos = new ArrayList<>();
             
             while(rs.next()){                
                 bancos.add(rs.getString("datname"));                
             }
             
-            if(!(bancos.contains("teste4"))){
-                String sqlCreate = "CREATE DATABASE teste4;";
-                stmt.addBatch(sqlCreate);
-                stmt.executeBatch();
-                System.out.println("Banco 'teste4' criado com sucesso!");
-                stmt.clearBatch();
-                stmt.close();
+            System.out.println("Verificando a existência do Banco de Dados...");          
+            if(!(bancos.contains(nomeBanco))){
+                System.out.println("Banco não encontrado, executando script de criação do DB...");
+                CriarDatabase(nomeBanco);
             }else{
-                System.out.println("Banco 'teste4' já existente!");
+                System.out.println("Banco '"+ nomeBanco +"' já existente!");
             }
             
-            //stmt.clearBatch();
             stmt.close();
             
         /** Retorna um erro caso nao encontre o driver, ou alguma informacao sobre o mesmo
@@ -106,16 +97,54 @@ public class DatabaseConnection {
             Desconectar();
         }
     }
-    
-    
+
+    private void CriarDatabase(String nomeBanco) throws SQLException {
+        String sql = "CREATE DATABASE " + nomeBanco + ";";
+        stmt.addBatch(sql);
+        stmt.executeBatch();
+        stmt.clearBatch();
+        stmt.close();
+        System.out.println("Banco " + nomeBanco + " criado com sucesso!");
+        
+        endereco = "jdbc:postgresql://localhost:5432/" + nomeBanco;
+        con = DriverManager.getConnection(endereco, usuario, senha);
+        stmt = con.createStatement();        
+               
+        System.out.println("Criando tabelas e atributos...");
+        sql = "CREATE TABLE aluno"
+                + "("
+                + "id_aluno serial PRIMARY KEY,"
+                + "nome varchar(50)"
+                + "); \n" +
+              "CREATE TABLE curso"
+                + "("
+                + "id_curso serial PRIMARY KEY,"
+                + "descricao varchar(50),"
+                + "ementa text"
+                + "); \n" +
+              "CREATE TABLE curso_aluno"
+                + "("
+                + "id_curso_aluno serial PRIMARY KEY,"
+                + "id_aluno int,"
+                + "id_curso int,"
+                + "FOREIGN KEY (id_aluno) REFERENCES aluno (id_aluno),"
+                + "FOREIGN KEY (id_curso) REFERENCES curso (id_curso)"
+                + ");";
+        stmt.execute(sql);
+        //stmt.executeBatch();
+        System.out.println("Campos criados com sucesso!");
+        //stmt.clearBatch();
+        //System.out.println("Criando views...");
+        //sql = "";
+        stmt.close();
+    }
+      
     public void Conectar(String nomeBanco, String strUsuario, String strSenha) {
 
     	/** Recebendo o endereco,usuario e senha do usuario e repassando para a variavel global */
-        endereco = "jdbc:postgresql://localhost:5432/"; 
+        endereco = "jdbc:postgresql://localhost:5432/" + nomeBanco; 
         usuario = strUsuario == null ? "postgres" : strUsuario;
-        //usuario = "postgres";
         senha = strSenha == null ? "admin" : strSenha ;
-        //senha = "admin";
 
         try {
             

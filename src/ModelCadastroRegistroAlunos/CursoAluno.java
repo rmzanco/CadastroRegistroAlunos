@@ -9,15 +9,25 @@ package ModelCadastroRegistroAlunos;
  *
  * @author rodri
  */
-public class VwCursoAluno {
+public class CursoAluno {
 
-    public VwCursoAluno() {
+    public CursoAluno() {
     }
+    
+    public int IdCursoAluno;
     
     public int IdAluno;
     
     public int IdCurso;
 
+    public int getIdCursoAluno() {
+        return IdCursoAluno;
+    }
+
+    public void setIdCursoAluno(int IdCursoAluno) {
+        this.IdCursoAluno = IdCursoAluno;
+    }
+    
     public int getIdAluno() {
         return IdAluno;
     }
