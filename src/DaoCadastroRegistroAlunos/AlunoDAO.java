@@ -22,7 +22,7 @@ public class AlunoDAO implements IAlunoDAO {
     
     private DatabaseConnection conexao = new DatabaseConnection();
     
-    private String querySelecionar = "SELECT * FROM aluno;";
+    private String querySelecionar = "SELECT * FROM aluno";
     
     private String queryIncluir = "INSERT INTO aluno (nome) VALUES ( '{0}' );";
     
@@ -37,9 +37,25 @@ public class AlunoDAO implements IAlunoDAO {
        
         try {           
             conexao.Conectar("teste4", null, null);
-            conexao.rs = conexao.stmt.executeQuery(querySelecionar);
+            
+            String sql = querySelecionar;
+            
+            if(aluno.Nome != null){               
+                sql += " WHERE nome = '" + aluno.Nome + "'";                
+            }
+            
+            if(aluno.IdAluno != 0){
+                if(sql.contains("WHERE")){
+                    sql += " AND id_aluno = " + Integer.toString(aluno.IdAluno);                                    
+                }else{
+                    sql += " WHERE id_aluno = " + Integer.toString(aluno.IdAluno);                                    
+                }                
+            }
+            
+            conexao.rs = conexao.stmt.executeQuery(sql);
             
             while(conexao.rs.next()){
+                aluno = new Aluno();
                 aluno.IdAluno = conexao.rs.getInt("id_aluno");
                 aluno.Nome = conexao.rs.getString("nome");
                 alunos.add(aluno);

@@ -38,6 +38,7 @@ public class CursoAlunoDAO implements ICursoAlunoDAO {
             conexao.rs = conexao.stmt.executeQuery(querySelecionar);
             
             while(conexao.rs.next()){
+                cursoAluno = new CursoAluno();
                 cursoAluno.IdCursoAluno = conexao.rs.getInt("id_curso_aluno");
                 cursoAluno.IdAluno = conexao.rs.getInt("id_aluno");
                 cursoAluno.IdCurso = conexao.rs.getInt("id_curso");

@@ -5,6 +5,8 @@
  */
 package BLLCadastroRegistroAlunos.Interface;
 
+import ModelCadastroRegistroAlunos.Aluno;
+import ModelCadastroRegistroAlunos.Curso;
 import ModelCadastroRegistroAlunos.CursoAluno;
 import java.util.List;
 
@@ -33,6 +35,14 @@ public interface ICursoAlunoBLO {
      * @param cursoAluno Instância de CursoAluno 
      */
     public void Incluir(CursoAluno cursoAluno);
+    
+    /**
+     * Apos incluir um aluno esse método pega o último aluno cadastrado e
+     * registra na tabela.
+     * @param aluno Instância de Aluno.
+     * @param curso Instância de Curso.
+     */
+    public void SelecionarAlunoECursoParaIncluir(Aluno aluno, Curso curso);
     
     /**
      * Atualiza um CursoAluno

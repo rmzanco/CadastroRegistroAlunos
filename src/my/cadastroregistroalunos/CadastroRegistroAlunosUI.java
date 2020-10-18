@@ -14,6 +14,8 @@ import BLLCadastroRegistroAlunos.Interface.ICursoBLO;
 import ModelCadastroRegistroAlunos.Aluno;
 import ModelCadastroRegistroAlunos.Curso;
 import ModelCadastroRegistroAlunos.CursoAluno;
+import java.util.ArrayList;
+import java.util.List;
 import javax.swing.JOptionPane;
 
 /**
@@ -34,8 +36,21 @@ public class CadastroRegistroAlunosUI extends javax.swing.JFrame {
         this.cursoBlo = new CursoBLO();
         this.cursoAlunoBlo = new CursoAlunoBLO();
         initComponents();
+        preencherCursos();
     }
 
+    public void preencherCursos(){
+        
+        ArrayList<Curso> cursos = cursoBlo.Selecionar();
+        comboCursos.removeAllItems();
+        
+        for(int i = 0 ; i < cursos.size(); i++ ){
+           String curso = cursos.get(i).Descricao;           
+           comboCursos.addItem(curso);         
+        }        
+        
+    }
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -335,11 +350,29 @@ public class CadastroRegistroAlunosUI extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btn_InserirAlunoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_InserirAlunoActionPerformed
-        Aluno aluno = new Aluno();
-        CursoAluno cursoAluno = new CursoAluno();
-        
-        
-        aluno.setNome(tf_nmAluno.toString());
+        try{
+            Aluno aluno = new Aluno();
+            CursoAluno cursoAluno = new CursoAluno();
+            Curso curso = new Curso();
+
+            aluno.Nome = tf_nmAluno.getText();
+            alunoBlo.Incluir(aluno);
+            int idAluno = alunoBlo.SelecionarPrimeiro(aluno).IdAluno;
+
+            curso.Descricao = (String) comboCursos.getSelectedItem();
+            int idCurso = cursoBlo.SelecionarPrimeiro(curso).IdCurso;
+
+            cursoAluno.IdAluno = idAluno;
+            cursoAluno.IdCurso = idCurso;
+            cursoAlunoBlo.Incluir(cursoAluno);
+            
+            JOptionPane.showMessageDialog(null, "Aluno cadastrado com sucesso.");
+        }catch(Exception e){
+            JOptionPane.showMessageDialog(null, "Erro ao Incluir Aluno no BD.");
+            e.printStackTrace();
+        }
+                     
+        //cursoAluno.IdCurso = Integer.getInteger(comboCursos.)comboCursos.getSelectedObjects()
         
     }//GEN-LAST:event_btn_InserirAlunoActionPerformed
 
@@ -360,7 +393,9 @@ public class CadastroRegistroAlunosUI extends javax.swing.JFrame {
             Curso curso = new Curso();
             curso.Descricao = tf_descricao.getText();
             curso.Ementa = tf_ementa.getText();
-            cursoBlo.Incluir(curso);            
+            cursoBlo.Incluir(curso);
+            JOptionPane.showMessageDialog(null, "Curso cadastrado com sucesso.");           
+            preencherCursos();
         }catch(Exception e){
             JOptionPane.showMessageDialog(null, "Erro ao Incluir Curso no BD.");
             e.printStackTrace();
