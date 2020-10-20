@@ -119,5 +119,41 @@ public class AlunoDAO implements IAlunoDAO {
             sqlex.printStackTrace();
         }            
     }
+
+    @Override
+    public ArrayList<String[]> SelecionarViewAluno() {
+        ArrayList<String[]> lista = new ArrayList<String[]>();
+        String nome;
+        String curso;
+  
+        conexao.Conectar("teste4", null, null);       
+               
+        try {
+            String sql = 
+                "SELECT "
+                + "alu.nome AS nome_aluno, "
+                + "curs.descricao AS nome_curso "
+                + "FROM aluno alu "
+                + "INNER JOIN curso_aluno ca ON ( alu.id_aluno = ca.id_aluno ) "
+                + "INNER JOIN curso curs ON (curs.id_curso = ca.id_curso)" ;
+        
+            conexao.rs = conexao.stmt.executeQuery(sql);
+            
+            while(conexao.rs.next()){                
+                nome = conexao.rs.getString("nome_aluno");
+                curso = conexao.rs.getString("nome_curso");
+                
+                lista.add(new String[]{nome,curso});               
+            }
+            
+        } catch (SQLException sqlex) {
+            JOptionPane.showMessageDialog(null, "erro na query");
+            sqlex.printStackTrace();
+        }finally{
+            conexao.Desconectar();          
+        }      
+        
+        return lista;
+    }
     
 }

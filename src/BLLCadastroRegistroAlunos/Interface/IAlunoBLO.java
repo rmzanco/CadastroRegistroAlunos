@@ -6,6 +6,7 @@
 package BLLCadastroRegistroAlunos.Interface;
 
 import ModelCadastroRegistroAlunos.Aluno;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -45,4 +46,10 @@ public interface IAlunoBLO {
      * @param aluno Instância da classe Aluno.
      */
     void Excluir(Aluno aluno);
+    
+    /**
+     * View para listar o aluno e seu curso na tabela aluno.
+     * @return Lista com Nome do aluno e o seu curso.
+     */
+    public ArrayList<String[]> SelecionarViewAluno();
 }

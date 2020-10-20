@@ -9,6 +9,7 @@ import BLLCadastroRegistroAlunos.Interface.IAlunoBLO;
 import DaoCadastroRegistroAlunos.AlunoDAO;
 import DaoCadastroRegistroAlunos.Interface.IAlunoDAO;
 import ModelCadastroRegistroAlunos.Aluno;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -55,6 +56,11 @@ public class AlunoBLO implements IAlunoBLO{
     public void Excluir(Aluno aluno) {
         if(aluno == null) throw (new IllegalArgumentException());
         this.alunoDao.Excluir(aluno);
+    }
+
+    @Override
+    public ArrayList<String[]> SelecionarViewAluno() {
+        return this.alunoDao.SelecionarViewAluno();
     }
     
 }
