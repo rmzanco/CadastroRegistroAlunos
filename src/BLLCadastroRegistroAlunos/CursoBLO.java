@@ -9,6 +9,7 @@ import BLLCadastroRegistroAlunos.Interface.ICursoBLO;
 import DaoCadastroRegistroAlunos.CursoDAO;
 import DaoCadastroRegistroAlunos.Interface.ICursoDAO;
 import ModelCadastroRegistroAlunos.Curso;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -27,6 +28,11 @@ public class CursoBLO implements ICursoBLO {
     @Override
     public List<Curso> Selecionar(Curso curso) {
         return this.cursoDao.Selecionar(curso);
+    }
+    
+    @Override
+    public ArrayList<Curso> Selecionar() {
+        return this.cursoDao.Selecionar();
     }
 
     @Override

@@ -14,7 +14,12 @@ import BLLCadastroRegistroAlunos.Interface.ICursoBLO;
 import ModelCadastroRegistroAlunos.Aluno;
 import ModelCadastroRegistroAlunos.Curso;
 import ModelCadastroRegistroAlunos.CursoAluno;
+import java.awt.BorderLayout;
+import java.util.ArrayList;
+import java.util.List;
 import javax.swing.JOptionPane;
+import javax.swing.JScrollPane;
+import javax.swing.table.DefaultTableModel;
 
 /**
  *
@@ -34,8 +39,23 @@ public class CadastroRegistroAlunosUI extends javax.swing.JFrame {
         this.cursoBlo = new CursoBLO();
         this.cursoAlunoBlo = new CursoAlunoBLO();
         initComponents();
+        preencherCursos();
+        preencheGridAlunos();
+        preencheGridCursos();
     }
 
+    public void preencherCursos(){
+        
+        ArrayList<Curso> cursos = cursoBlo.Selecionar();
+        comboCursos.removeAllItems();
+        
+        for(int i = 0 ; i < cursos.size(); i++ ){
+           String curso = cursos.get(i).Descricao;           
+           comboCursos.addItem(curso);         
+        }        
+        
+    }
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -52,10 +72,10 @@ public class CadastroRegistroAlunosUI extends javax.swing.JFrame {
         jTabbedPane2 = new javax.swing.JTabbedPane();
         jPanel1 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        tableAlunos = new javax.swing.JTable();
         jPanel4 = new javax.swing.JPanel();
         jScrollPane2 = new javax.swing.JScrollPane();
-        jTable2 = new javax.swing.JTable();
+        tableCursos = new javax.swing.JTable();
         jPanel3 = new javax.swing.JPanel();
         jLabel2 = new javax.swing.JLabel();
         jTabbedPane3 = new javax.swing.JTabbedPane();
@@ -76,7 +96,7 @@ public class CadastroRegistroAlunosUI extends javax.swing.JFrame {
 
         jLabel1.setText("Exibir informações cadastradas");
 
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        tableAlunos.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null},
                 {null, null, null, null},
@@ -87,7 +107,7 @@ public class CadastroRegistroAlunosUI extends javax.swing.JFrame {
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
         ));
-        jScrollPane1.setViewportView(jTable1);
+        jScrollPane1.setViewportView(tableAlunos);
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -108,7 +128,7 @@ public class CadastroRegistroAlunosUI extends javax.swing.JFrame {
 
         jTabbedPane2.addTab("Alunos", jPanel1);
 
-        jTable2.setModel(new javax.swing.table.DefaultTableModel(
+        tableCursos.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null},
                 {null, null, null, null},
@@ -119,7 +139,7 @@ public class CadastroRegistroAlunosUI extends javax.swing.JFrame {
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
         ));
-        jScrollPane2.setViewportView(jTable2);
+        jScrollPane2.setViewportView(tableCursos);
 
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
         jPanel4.setLayout(jPanel4Layout);
@@ -335,11 +355,31 @@ public class CadastroRegistroAlunosUI extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btn_InserirAlunoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_InserirAlunoActionPerformed
-        Aluno aluno = new Aluno();
-        CursoAluno cursoAluno = new CursoAluno();
-        
-        
-        aluno.setNome(tf_nmAluno.toString());
+        try{
+            Aluno aluno = new Aluno();
+            CursoAluno cursoAluno = new CursoAluno();
+            Curso curso = new Curso();
+
+            aluno.Nome = tf_nmAluno.getText();
+            alunoBlo.Incluir(aluno);
+            int idAluno = alunoBlo.SelecionarPrimeiro(aluno).IdAluno;
+
+            curso.Descricao = (String) comboCursos.getSelectedItem();
+            int idCurso = cursoBlo.SelecionarPrimeiro(curso).IdCurso;
+
+            cursoAluno.IdAluno = idAluno;
+            cursoAluno.IdCurso = idCurso;
+            cursoAlunoBlo.Incluir(cursoAluno);
+            
+            JOptionPane.showMessageDialog(null, "Aluno cadastrado com sucesso.");
+            preencheGridAlunos();
+            preencheGridCursos();
+        }catch(Exception e){
+            JOptionPane.showMessageDialog(null, "Erro ao Incluir Aluno no BD.");
+            e.printStackTrace();
+        }
+                     
+        //cursoAluno.IdCurso = Integer.getInteger(comboCursos.)comboCursos.getSelectedObjects()
         
     }//GEN-LAST:event_btn_InserirAlunoActionPerformed
 
@@ -360,7 +400,11 @@ public class CadastroRegistroAlunosUI extends javax.swing.JFrame {
             Curso curso = new Curso();
             curso.Descricao = tf_descricao.getText();
             curso.Ementa = tf_ementa.getText();
-            cursoBlo.Incluir(curso);            
+            cursoBlo.Incluir(curso);
+            JOptionPane.showMessageDialog(null, "Curso cadastrado com sucesso.");           
+            preencherCursos();
+            preencheGridAlunos();
+            preencheGridCursos();
         }catch(Exception e){
             JOptionPane.showMessageDialog(null, "Erro ao Incluir Curso no BD.");
             e.printStackTrace();
@@ -390,10 +434,46 @@ public class CadastroRegistroAlunosUI extends javax.swing.JFrame {
     private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JTabbedPane jTabbedPane2;
     private javax.swing.JTabbedPane jTabbedPane3;
-    private javax.swing.JTable jTable1;
-    private javax.swing.JTable jTable2;
+    private javax.swing.JTable tableAlunos;
+    private javax.swing.JTable tableCursos;
     private javax.swing.JTextField tf_descricao;
     private javax.swing.JTextField tf_ementa;
     private javax.swing.JTextField tf_nmAluno;
     // End of variables declaration//GEN-END:variables
+
+    private void preencheGridAlunos() {
+
+        String[] nomeColunas = {"Nome","Curso"};
+        
+        List<String[]> lista = alunoBlo.SelecionarViewAluno();
+        
+        DefaultTableModel model = new DefaultTableModel(
+        lista.toArray(new String[lista.size()][]), nomeColunas);
+        
+        tableAlunos.setModel(model);
+        
+        //contentPane.add(new JScrollPane(tableAlunos), BorderLayout.CENTER);
+        
+    }
+
+    private void preencheGridCursos() {
+        String[] nomeColunas = {"Descrição","Ementa"};
+        
+        List<Curso> cursos = cursoBlo.Selecionar();
+        List<String[]> lista = new ArrayList<String[]>();
+        String descricao;
+        String ementa;
+        
+        for(int i = 0; i < cursos.size() ; i++){
+            descricao = cursos.get(i).Descricao;
+            ementa = cursos.get(i).Ementa;
+            
+            lista.add(new String[]{descricao,ementa});            
+        }        
+        
+        DefaultTableModel model = new DefaultTableModel(
+        lista.toArray(new String[lista.size()][]), nomeColunas);;
+        
+        tableCursos.setModel(model);
+    }
 }

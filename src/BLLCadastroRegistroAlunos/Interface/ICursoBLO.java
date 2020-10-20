@@ -6,6 +6,7 @@
 package BLLCadastroRegistroAlunos.Interface;
 
 import ModelCadastroRegistroAlunos.Curso;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -20,6 +21,13 @@ public interface ICursoBLO {
      * @return Retorna uma lista de cursos.
      */
     public List<Curso> Selecionar(Curso curso);
+    
+    /**
+     * Seleciona os dados de Curso.
+     * @param curso Instancia da classe Curso.
+     * @return Retorna uma lista de cursos.
+     */
+    public ArrayList<Curso> Selecionar();
     
     /**
      * Seleciona o primeiro item de Curso

@@ -6,6 +6,7 @@
 package DaoCadastroRegistroAlunos.Interface;
 
 import ModelCadastroRegistroAlunos.Aluno;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -32,9 +33,14 @@ public interface IAlunoDAO {
     
     /** 
      * Excluir registro do BD
-     * @param aluno 
+     * @param aluno Instância de um aluno
      */
     void Excluir(Aluno aluno);
     
+    /**
+     * Retorna do banco a view para listar o aluno e seu curso na tabela aluno.
+     * @return Lista com as colunas aluno/curso
+     */
+    public ArrayList<String[]> SelecionarViewAluno ();    
     
 }

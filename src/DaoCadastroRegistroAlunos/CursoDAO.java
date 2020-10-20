@@ -21,7 +21,7 @@ public class CursoDAO implements ICursoDAO {
 
     private DatabaseConnection conexao = new DatabaseConnection();
     
-    private String querySelecionar = "SELECT * FROM curso;";
+    private String querySelecionar = "SELECT * FROM curso";
     
     private String queryIncluir = "INSERT INTO curso (descricao,ementa) VALUES ( '{0}','{1}' );";
     
@@ -30,22 +30,68 @@ public class CursoDAO implements ICursoDAO {
     private String queryExcluir = "DELETE FROM curso WHERE id_curso = {0};";
     
     @Override
-    public List<Curso> Selecionar(Curso curso) {
-        List<Curso> cursos = new ArrayList<Curso>();
+    public ArrayList<Curso> Selecionar(Curso curso) {
+        ArrayList<Curso> cursos = new ArrayList<Curso>();
        
+        String sql = querySelecionar;
+        
+        if(curso.Descricao != null){            
+            sql += " WHERE descricao = '" + curso.Descricao + "'";                
+        }
+        if(curso.Ementa != null){ 
+            if(sql.contains("WHERE")){
+                sql += " AND descricao = '" + curso.Ementa + "'";                
+            }else{
+                sql += " WHERE descricao = '" + curso.Ementa + "'";                
+            }
+        }
+        
+        if(curso.IdCurso != 0){
+            if(sql.contains("WHERE")){
+                sql += " AND id_curso = " + Integer.toString(curso.IdCurso);   
+            }else{
+                sql += " WHERE id_curso = " + Integer.toString(curso.IdCurso); 
+            }
+        }
+                                
         try {           
             conexao.Conectar("teste4", null, null);
-            conexao.rs = conexao.stmt.executeQuery(querySelecionar);
+            conexao.rs = conexao.stmt.executeQuery(sql);
             
             while(conexao.rs.next()){
+                curso = new Curso();
                 curso.IdCurso = conexao.rs.getInt("id_curso");
                 curso.Descricao = conexao.rs.getString("descricao");
                 curso.Ementa = conexao.rs.getString("ementa");
                 cursos.add(curso);
             }
             
+            conexao.Desconectar();                
+        } catch (SQLException sqlex) {
+            JOptionPane.showMessageDialog(null, "erro na query");
+            sqlex.printStackTrace();
+        }
+              
+       return cursos;       
+    }
+    
+    @Override
+    public ArrayList<Curso> Selecionar(){     
+        ArrayList<Curso> cursos = new ArrayList<>();
+        Curso curso = new Curso();
+        
+        try {           
+            conexao.Conectar("teste4", null, null);
+            conexao.rs = conexao.stmt.executeQuery(querySelecionar);
             
-            //TODO: CRIAR PARAMETROS PARA O SELECIONAR (WHERE) - PARA ENCONTRAR QUAL CAMPO DEVE SER ATUALIZADO.
+            while(conexao.rs.next()){
+                curso = new Curso();
+                curso.IdCurso = conexao.rs.getInt("id_curso");
+                curso.Descricao = conexao.rs.getString("descricao");
+                curso.Ementa = conexao.rs.getString("ementa");
+                cursos.add(curso);
+            }
+            
             conexao.Desconectar();                
         } catch (SQLException sqlex) {
             JOptionPane.showMessageDialog(null, "erro na query");

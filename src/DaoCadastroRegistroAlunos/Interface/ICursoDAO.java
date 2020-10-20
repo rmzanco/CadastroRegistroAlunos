@@ -6,6 +6,7 @@
 package DaoCadastroRegistroAlunos.Interface;
 
 import ModelCadastroRegistroAlunos.Curso;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -16,9 +17,14 @@ public interface ICursoDAO {
     
     /**Seleciona uma lista de cursos.
      * @param curso Instância da classe para filtrar consulta.
-     * @return  
+     * @return Lista de cursos
      */
-    List<Curso> Selecionar(Curso curso);
+    ArrayList<Curso> Selecionar(Curso curso);
+    
+    /**Seleciona uma lista de cursos.
+     * @return Lista de cursos
+     */
+    ArrayList<Curso> Selecionar();
     
     /**Incluir um curso no BD.
      * @param curso  Instância de um curso com dados para cadastro.
